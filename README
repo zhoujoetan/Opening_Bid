@@ -1,0 +1,47 @@
+General idea
+
+Contract Bridge is a card game in which the players bid to see who gets to play first. It has evolved some fairly complex rules for how to bid. In this assignment, you will write a program that decides what to bid. This program determines only the first, or "opening" bid; later bids are beyond the scope of this assignment.
+
+You do not need to know how to play Bridge in order to write this program. I will tell you everything you need to know about Bridge. The rules that I give for making the opening bid are basically the system invented by Charles Goren, with minor modifications by others. Understand this: If you know a different set of rules, forget them, because your program will be graded on whether it follows my rules, which are slightly simplified (for instance, I ignore "quick tricks").
+
+The cards
+
+There are 52 cards in a Bridge deck. Every card has a value (2, 3, 4, 5, 6, 7, 8, 9, 10, Jack, Queen, King, or Ace) and a suit (Club, Diamond, Heart, or Spade). The suits are ranked: Clubs < Diamonds < Hearts < Spades. Clubs and Diamonds are the minor suits; Hearts and Spades are the major suits. The Jack, Queen, King, and Ace are called face cards. A hand consists of 13 cards randomly chosen from a deck.
+
+We will use the following abbreviations: C=Clubs, D=Diamonds, H=Hearts, S=Spades, J=Jack, Q=Queen, K=King, and A=Ace. An individual card will be represented by its value followed by its suit, for example, '6H' represents the 6 of Hearts. For convenience in typing out a hand, we will represent it as a string of 13 cards separated by spaces, for example, '5C 7H AS JD 9D 2C KH 10H 4C 8H 8C AD 10C'. [However, this is only convenient for people, not for programs. I strongly recommend that you have a function to convert this to a different representation, maybe a list of tuples or something like that.]
+
+A bid will be represented by a string consisting of a count 1 to 7, and a trump suit, which may be one of the four suits or the special No Trump bid, abbreviated NT, meaning no particular suit. So some legal bids might be '1S', '5H', or '3NT'. For about half the hands there will be no good opening bid, and in these cases your program should return a bid of None--that is, the special Python value None, not the string 'None'.
+
+Determining the opening bid proceeds in two stages. First, you need to count the number of points in the hand. Second, you use this point count along with the distribution (how many of each suit there are) to decide the opening bid.
+
+Counting points
+
+The point count of a hand is the number of high card points, plus the number of distribution points.
+
+High card points: Each Ace counts 4 points; each King counts 3 points; each Queen counts 2 points; and each Jack counts 1 point. For example, the hand given above contains AS, JD, KH, and AD, which is 4+1+3+4=12 points.
+
+Distribution points: If you have more than 4 cards in any suit, count 1 point for each additional card. The sample hand above has 5 Clubs, 3 Diamonds, 4 Hearts, and 1 Spade, so add 1 distribution point for the Clubs, making the total point count 13.
+
+A hand is balanced if it contains at least two cards and not more than four cards in every suit. As a special case, a hand that has 5 cards in a minor suit, with 3, 3, and 2 cards in the other suits, is also considered balanced.
+
+Bidding
+
+The following is slightly adapted from http://www.cs.cmu.edu/~hde/bidding.htm:
+
+Your program should bid as follows:
+
+1NT: Exactly 16-18 high card points, a balanced hand (4-3-3-3, 4-4-3-2, or 5-3-3-2 where the 5 cards are in a minor suit).
+1H or 1S: 13-21 points and 5 or more cards in Hearts or Spades (bid the longer suit; if you have two five-card suits, bid the higher-ranking suit.)
+1C or 1D: 13-21 points (bid whichever of Clubs or Diamonds is the longer suit; if equal in length, bid Clubs).
+1C or 1D: A balanced hand with 19-20 high card points. Bid the longest minor suit, even if it's only 3 cards. (With 3-3 in minors bid 1C; with 4-4 or higher bid 1D.)
+2NT: Exactly 21-23 high card points and a balanced hand (4-3-3-3, 4-4-3-2, or 5-3-3-2 where the 5 cards are in a minor suit).
+2 of a suit: A very strong hand (22+ points) with 5 or more cards in some suit (bid that suit).
+If you have 5 or more cards in two different suits:
+If one is a major suit and the other isn't, bid 2 of the major suit; otherwise,
+If one suit has more high-card points, bid 2 of that suit; otherwise,
+If one suit is longer, bid 2 of that suit; otherwise,
+Bid 2 of the lower ranking suit.
+3 of a suit: Preemptive: a weak hand (5-9 high card points) with a 7-card suit (bid that suit).
+4 of a suit: Preemptive: 6-108 high card points with an 8-card suit (bid that suit).
+None in all other cases.
+
